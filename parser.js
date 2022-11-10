@@ -1,4 +1,4 @@
-function parseExpression ( program ){
+export const parseExpressionType = ( program ) => {
     program = skipSpace( program );
     let match, expr;
     if ( match = /^"([^"]*)"/.exec( program )){ // Strings
@@ -14,13 +14,15 @@ function parseExpression ( program ){
     return parseApply(expr, program.slice(match[0].length));
 } 
 
-function skipSpace (string) {
+export function skipSpace (string) { // skips spaces if the first char is an empty string
     let first = string.search(/\S/);
     if (first == -1) return "";
     return string.slice(first);
 }
 
-function parseApply (expr, program) {
+export function parseApply (expr, program) { // applies parsed data types into expression 
+    // types in a returned object
+    // Complex objects result from recursive parseApply applications
     program = skipSpace( program );
     if (program[0] != "(") { // If the next character here isn't a parenthesis, 
         // then it isn't an application (nothing is being called) so it just returns
@@ -30,7 +32,7 @@ function parseApply (expr, program) {
     program = skipSpace( program.slice(1) );
     expr = { type: "apply", operator: expr, args: [] }
     while ( program[0] != ")" ) {
-        let arg = parseExpression(program); // Recursive! Since parseExpression 
+        let arg = parseExpressionType(program); // Recursive! Since parseExpressionType 
         //calls parseApply. "Indirect recursion"
         expr.args.push(arg.expr);
         program = skipSpace(arg.rest);
@@ -43,13 +45,14 @@ function parseApply (expr, program) {
     return parseApply(expr, program.slice(1)) // recursive!
 }
 
-function parse(program) {
-    let {expr, rest} = parseExpression(program);
+export const parse = (program) => {
+    let {expr, rest} = parseExpressionType(program);
     if (skipSpace(rest).length > 0) {
       throw new SyntaxError("Unexpected text after program");
     }
     return expr;
   }
 
-console.log(parse("+(a, 10)"));
+// console.log(parse("+(a, 10)"));
+
 
