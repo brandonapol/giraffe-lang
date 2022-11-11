@@ -12,9 +12,9 @@ topScope.print = (value) => {
     return value;
 }
 
-function run(program) {
+const run = (program) => {
         return evaluate(parse(program), Object.create(topScope));
-    }
+}
 
 
 
