@@ -1,5 +1,6 @@
 import { parse, parseApply, parseExpressionType, skipSpace } from '../egg/parser.js';
 import specialForms from './specialForms.js';
+import topScope from './topScope.js';
 
 function evaluate(expr, scope) {
     if (expr.type == "value") { // If it's just a value, no change
